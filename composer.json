@@ -1,0 +1,26 @@
+{
+    "name": "hustshenl/yii2-pinyin",
+    "description": "Yii2 translation",
+    "keywords": ["yii2", "translation", "pinyin"],
+    "type": "yii2-extension",
+    "license": "BSD",
+    "support": {
+        "issues": "https://github.com/hustshenl/yii2-pinyin/issues",
+        "wiki": "https://github.com/hustshenl/yii2-pinyin/wiki",
+        "source": "https://github.com/hustshenl/yii2-pinyin"
+    },
+    "authors": [
+        {
+            "name": "Shen.L",
+            "email": "shen@shenl.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "hustshenl\\pinyin\\": ""
+        }
+    }
+}
