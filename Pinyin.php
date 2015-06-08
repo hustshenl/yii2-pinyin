@@ -40,24 +40,24 @@ class Pinyin
      *
      * @var array
      */
-    protected static $appends = array();
+    protected static $appends = [];
 
     /**
      * Settings.
      *
      * @var array
      */
-    protected static $settings = array(
-                                  'delimiter'    => ' ',
-                                  'accent'       => true,
+    protected static $settings = [
+                                  'delimiter'    => '',
+                                  'accent'       => false,
                                   'only_chinese' => false,
                                   'uppercase'    => false
-                                 );
+                                 ];
 
     /**
      * The instance.
      *
-     * @var \common\components\Pinyin
+     * @var \hustshenl\pinyin\Pinyin
      */
     private static $_instance;
 
@@ -84,7 +84,7 @@ class Pinyin
     /**
      * Get class instance
      *
-     * @return \common\components\Pinyin
+     * @return \hustshenl\pinyin\Pinyin
      */
     public static function getInstance()
     {
@@ -115,7 +115,7 @@ class Pinyin
      *
      * @return void
      */
-    public static function settings(array $settings = array())
+    public static function settings(array $settings = [])
     {
         static::$settings = array_merge(static::$settings, $settings);
     }
@@ -128,7 +128,7 @@ class Pinyin
      *
      * @return string
      */
-    public static function trans($string, array $settings = array())
+    public static function trans($string, array $settings = [])
     {
         $parsed = self::parse($string, $settings);
 
@@ -139,11 +139,11 @@ class Pinyin
      * Get first letters of string.
      *
      * @param string $string   source string.
-     * @param string $settings settings
+     * @param Array $settings settings
      *
      * @return string
      */
-    public static function letter($string, array $settings = array())
+    public static function letter($string, array $settings = [])
     {
         $parsed = self::parse($string, $settings);
 
@@ -160,7 +160,7 @@ class Pinyin
      *
      * @return array
      */
-    public static function parse($string, array $settings = array())
+    public static function parse($string, array $settings = [])
     {
         $instance = static::getInstance();
 
@@ -182,11 +182,11 @@ class Pinyin
         //add delimiter
         $delimitedPinyin = $instance->delimit($pinyin, $settings['delimiter']);
 
-        $return = array(
+        $return = [
                    'src'    => $string,
                    'pinyin' => $instance->escape($delimitedPinyin),
                    'letter' => $instance->getFirstLetters($source, $settings),
-                  );
+                  ];
 
         return $return;
     }
@@ -198,7 +198,7 @@ class Pinyin
      *
      * @return void
      */
-    public static function appends($appends = array())
+    public static function appends($appends = [])
     {
         static::$appends = array_merge(static::$appends, static::formatAdditionalWords($appends));
     }
@@ -215,7 +215,7 @@ class Pinyin
     {
         $letterCase = $settings['uppercase'] ? 'strtoupper' : 'strtolower';
 
-        $letters = array();
+        $letters = [];
 
         foreach (explode(' ', $pinyin) as $word) {
             if (empty($word)) {
@@ -243,7 +243,6 @@ class Pinyin
     {
         $dictionary = array_merge(self::$dictionary, $this->getAdditionalWords());
         $pinyin     = strtr($this->prepare($string), $dictionary);
-
         return trim(str_replace("  ", ' ', $pinyin));
     }
 
@@ -326,9 +325,9 @@ class Pinyin
      */
     protected function prepare($string)
     {
-        $pattern = array(
+        $pattern = [
                 '/([a-z])+(\d)/' => '\\1\\\2', // test4 => test\4
-            );
+            ];
 
         return preg_replace(array_keys($pattern), $pattern, $string);
     }
@@ -343,16 +342,17 @@ class Pinyin
      */
     protected function escape($value)
     {
-        $search  = array("\\", "\x00", "\n", "\r", "'", '"', "\x1a");
-        $replace = array("\\\\", "\\0", "\\n", "\\r", "\'", '\"', "\\Z");
+        $search  = ["\\", "\x00", "\n", "\r", "'", '"', "\x1a"];
+        $replace = ["\\\\", "\\0", "\\n", "\\r", "\'", '\"', "\\Z"];
 
         return str_replace($search, $replace, $value);
     }
 
     /**
      * Add delimiter.
-     *
-     * @param string $string
+     * @param $string
+     * @param string $delimiter
+     * @return mixed
      */
     protected function delimit($string, $delimiter = '')
     {
@@ -368,10 +368,10 @@ class Pinyin
      */
     protected function removeTone($string)
     {
-        $replacement = array(
+        $replacement = [
                         '/u:/' => 'u',
-                        '/\d/' => '',
-                       );
+                        '/([a-zA-ZüÜ]+\:?)(\d)/' => '\1',
+                       ];
 
         return preg_replace(array_keys($replacement), $replacement, $string);
     }
@@ -389,14 +389,14 @@ class Pinyin
         // find words with a number behind them, and replace with callback fn.
         return str_replace('u:', 'ü', preg_replace_callback(
             '~([a-zA-ZüÜ]+\:?)(\d)~',
-            array($this, 'addAccentsCallback'),
+            [$this, 'addAccentsCallback'],
             $string));
     }
 
     /**
      * helper callback
-     *
-     * @param array $match
+     * @param $match
+     * @return mixed|string
      */
     protected function addAccentsCallback($match)
     {
@@ -417,19 +417,19 @@ class Pinyin
                        'ou ua uai ue ui uo üe ' .
                        'OU UA UAI UE UI UO ÜE';
 
-            // build an array like array('a' => 'a*') and store statically
+            // build an array like ['a' => 'a*'] and store statically
             $accentmap = array_combine(explode(' ', $nostars), explode(' ', $stars));
         }
 
-        $vowels = array('a*', 'e*', 'i*', 'o*', 'u*', 'ü*', 'A*', 'E*', 'I*', 'O*', 'U*', 'Ü*');
+        $vowels = ['a*', 'e*', 'i*', 'o*', 'u*', 'ü*', 'A*', 'E*', 'I*', 'O*', 'U*', 'Ü*'];
 
-        $pinyin = array(
-            1 => array('ā', 'ē', 'ī', 'ō', 'ū', 'ǖ', 'Ā', 'Ē', 'Ī', 'Ō', 'Ū', 'Ǖ'),
-            2 => array('á', 'é', 'í', 'ó', 'ú', 'ǘ', 'Á', 'É', 'Í', 'Ó', 'Ú', 'Ǘ'),
-            3 => array('ǎ', 'ě', 'ǐ', 'ǒ', 'ǔ', 'ǚ', 'Ǎ', 'Ě', 'Ǐ', 'Ǒ', 'Ǔ', 'Ǚ'),
-            4 => array('à', 'è', 'ì', 'ò', 'ù', 'ǜ', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Ǜ'),
-            5 => array('a', 'e', 'i', 'o', 'u', 'ü', 'A', 'E', 'I', 'O', 'U', 'Ü')
-        );
+        $pinyin = [
+            1 => ['ā', 'ē', 'ī', 'ō', 'ū', 'ǖ', 'Ā', 'Ē', 'Ī', 'Ō', 'Ū', 'Ǖ'],
+            2 => ['á', 'é', 'í', 'ó', 'ú', 'ǘ', 'Á', 'É', 'Í', 'Ó', 'Ú', 'Ǘ'],
+            3 => ['ǎ', 'ě', 'ǐ', 'ǒ', 'ǔ', 'ǚ', 'Ǎ', 'Ě', 'Ǐ', 'Ǒ', 'Ǔ', 'Ǚ'],
+            4 => ['à', 'è', 'ì', 'ò', 'ù', 'ǜ', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Ǜ'],
+            5 => ['a', 'e', 'i', 'o', 'u', 'ü', 'A', 'E', 'I', 'O', 'U', 'Ü']
+        ];
 
         list(, $word, $tone) = $match;
 
