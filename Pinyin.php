@@ -139,7 +139,7 @@ class Pinyin
      * Get first letters of string.
      *
      * @param string $string   source string.
-     * @param Array $settings settings
+     * @param array $settings settings
      *
      * @return string
      */
