@@ -328,7 +328,7 @@ class Pinyin
      */
     protected function letterChinese($string)
     {
-        return preg_replace('/[^\p{Han}a-z]/u', '', $string);
+        return preg_replace('/[^\p{Han})\w]/u', '', $string);
     }
 
     /**
