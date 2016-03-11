@@ -51,6 +51,7 @@ class Pinyin
                                   'delimiter'    => '',
                                   'accent'       => false,
                                   'only_chinese' => false,
+                                  'letter_chinese' => false,
                                   'uppercase'    => false
                                  ];
 
@@ -169,6 +170,9 @@ class Pinyin
         // remove non-Chinese char.
         if ($settings['only_chinese']) {
             $string = $instance->justChinese($string);
+        }
+        if ($settings['letter_chinese']) {
+            $string = $instance->letterChinese($string);
         }
 
         $source = $instance->string2pinyin($string);
@@ -314,6 +318,17 @@ class Pinyin
     protected function justChinese($string)
     {
         return preg_replace('/[^\p{Han}]/u', '', $string);
+    }
+    /**
+     * Remove the non-Chinese characters.
+     *
+     * @param string $string source string.
+     *
+     * @return string
+     */
+    protected function letterChinese($string)
+    {
+        return preg_replace('/[^\p{Han}a-z]/u', '', $string);
     }
 
     /**
