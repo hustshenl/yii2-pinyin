@@ -51,7 +51,7 @@ class Pinyin
                                   'delimiter'    => '',
                                   'accent'       => false,
                                   'only_chinese' => false,
-                                  'letter_chinese' => false,
+                                  'only_word' => false,
                                   'uppercase'    => false
                                  ];
 
@@ -171,10 +171,11 @@ class Pinyin
         if ($settings['only_chinese']) {
             $string = $instance->justChinese($string);
         }
-        if ($settings['letter_chinese']) {
-            $string = $instance->letterChinese($string);
+        if ($settings['only_word']) {
+            $string = $instance->justWords($string);
         }
 
+        echo $string.' ';
         $source = $instance->string2pinyin($string);
         // add accents
         if ($settings['accent']) {
@@ -326,9 +327,9 @@ class Pinyin
      *
      * @return string
      */
-    protected function letterChinese($string)
+    protected function justWords($string)
     {
-        return preg_replace('/[^\p{Han})\w]/u', '', $string);
+        return preg_replace('/[^\p{Han})\w\d ]/u', '', $string);
     }
 
     /**
