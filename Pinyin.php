@@ -175,7 +175,6 @@ class Pinyin
             $string = $instance->justWords($string);
         }
 
-        echo $string.' ';
         $source = $instance->string2pinyin($string);
         // add accents
         if ($settings['accent']) {
