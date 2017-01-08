@@ -175,7 +175,6 @@ class Pinyin
             $string = $instance->justWords($string);
         }
 
-        echo $string.' ';
         $source = $instance->string2pinyin($string);
         // add accents
         if ($settings['accent']) {
@@ -329,7 +328,7 @@ class Pinyin
      */
     protected function justWords($string)
     {
-        return preg_replace('/[^\p{Han})\w\d ]/u', '', $string);
+        return preg_replace('/[^\p{Han}a-zA-Z0-9 ]/u', '', $string);
     }
 
     /**
