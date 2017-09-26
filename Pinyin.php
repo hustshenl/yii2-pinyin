@@ -33,30 +33,14 @@ class Pinyin extends BasePinyin
      * Chinese to pinyin.
      *
      * @param string $string  source string.
-     * @param array  $settings settings.
+     * @param string  $delimiter.
      *
      * @return string
      */
-    public static function trans($string, array $settings = [])
+    public static function trans($string, $delimiter = '')
     {
         $instance = self::getInstance();
-        $parsed = $instance->convert($string);
-        return $parsed['pinyin'];
-    }
-
-    /**
-     * Get first letters of string.
-     *
-     * @param string $string   source string.
-     * @param array $settings settings
-     *
-     * @return string
-     */
-    public static function letter($string, array $settings = [])
-    {
-        $parsed = self::parse($string, $settings);
-
-        return $parsed['letter'];
+        return $instance->permalink($string,is_array($delimiter)?'':$delimiter);
     }
 
 }// END OF CLASS
