@@ -3,7 +3,7 @@
     "description": "Yii2 translation",
     "keywords": ["yii2", "translation", "pinyin"],
     "type": "yii2-extension",
-    "license": "BSD",
+    "license": "MIT",
     "support": {
         "issues": "https://github.com/hustshenl/yii2-pinyin/issues",
         "wiki": "https://github.com/hustshenl/yii2-pinyin/wiki",
